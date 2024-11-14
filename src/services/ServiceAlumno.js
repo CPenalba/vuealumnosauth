@@ -16,4 +16,17 @@ export default class ServiceAlumno {
         });
     });
   }
+
+  getCursos() {
+    return new Promise(function (resolve) {
+      let request = "api/Alumnos/CursosToken";
+      let url = Global.urlApiAlumnos + request;
+      let headers = {
+        Authorization: `Bearer ${Global.token}`,
+      };
+      axios.get(url, { headers }).then((response) => {
+        resolve(response);
+      });
+    });
+  }
 }

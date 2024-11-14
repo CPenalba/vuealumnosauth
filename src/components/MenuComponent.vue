@@ -41,7 +41,11 @@
                 aria-expanded="false"
                 >Cursos</a
               >
-              <ul className="dropdown-menu"></ul>
+              <ul class="dropdown-menu" v-if="token && cursos.length > 0">
+                <li v-for="curso in cursos" :key="curso.id">
+                  <a class="dropdown-item" href="#">{{ curso }}</a>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
@@ -51,8 +55,31 @@
 </template>
 
 <script>
+import Global from "@/Global";
+import ServiceAlumno from "@/services/ServiceAlumno";
+const service = new ServiceAlumno();
+
 export default {
   name: "MenuComponent",
+  data() {
+    return {
+      cursos: [],
+      token: Global.token,
+    };
+  },
+  mounted() {
+    if (this.token) {
+      service
+        .getCursos()
+        .then((result) => {
+          this.cursos = result.data;
+          console.log(this.cursos);
+        })
+        .catch((error) => {
+          console.error("Error fetching courses:", error);
+        });
+    }
+  },
 };
 </script>
 
