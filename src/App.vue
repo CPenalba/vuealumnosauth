@@ -1,19 +1,40 @@
 <template>
   <div>
-    <MenuComponent />
-    <router-view></router-view>
+    <div v-if="sesion">
+      <MenuComponentVue />
+    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import MenuComponent from "./components/MenuComponent.vue";
-
+import MenuComponentVue from "./components/MenuComponent.vue";
 export default {
   name: "App",
   components: {
-    MenuComponent,
+    MenuComponentVue,
+  },
+  data() {
+    return {
+      sesion: false,
+    };
+  },
+  mounted() {
+    this.checkSession();
+  },
+  methods: {
+    checkSession() {
+      this.sesion = !!localStorage.getItem("token");
+    },
+  },
+  watch: {
+    $route() {
+      this.checkSession();
+    },
   },
 };
 </script>
 
-<style></style>
+<style>
+
+</style>

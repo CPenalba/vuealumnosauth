@@ -1,46 +1,43 @@
 <template>
   <div>
-    <h1>Login</h1>
+    <h1>Iniciar Sesión</h1>
     <hr />
-    <form v-on:submit.prevent="hacerLogin()">
-      <label>userName: </label>
-      <input type="text" v-model="login.userName" class="form-control" />
+    <form v-on:submit.prevent="login()">
+      <label>UserName: </label>
       <br />
-      <label>password: </label>
-      <input type="password" v-model="login.password" class="form-control" />
+      <input type="text" v-model="usuario.userName" />
       <br />
-      <button class="btn btn-info">Login</button>
+      <label>Password: </label>
+      <br />
+      <input type="password" v-model="usuario.password" />
+      <hr />
+      <button class="btn btn-dark">Login</button>
     </form>
   </div>
 </template>
 
 <script>
-import Global from "@/Global";
-import ServiceAlumno from "@/services/ServiceAlumno";
-const service = new ServiceAlumno();
+import ServiceAlumnos from "@/services/ServiceAlumnos";
+const service = new ServiceAlumnos();
 
 export default {
   name: "LoginComponent",
   data() {
     return {
-      login: {
+      usuario: {
         userName: "",
         password: "",
       },
     };
   },
   methods: {
-    hacerLogin() {
-      service
-        .login(this.login)
-        .then((result) => {
-          Global.token = result.data.response;
-          console.log(Global.token);
-          this.$router.push("/crear");
-        })
-        .catch(() => {
-          alert("Usuario o contraseña incorrectos");
-        });
+    login() {
+      service.login(this.usuario).then((result) => {
+        const token = result.data.response;
+        localStorage.setItem("token", token);
+        this.$root.checkSession();
+        this.$router.push("/alumnos");
+      });
     },
   },
 };
